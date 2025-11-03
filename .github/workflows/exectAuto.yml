@@ -1,0 +1,30 @@
+name: Execute test in chrome
+
+on: workflow_dispatch
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v5
+
+        - name: Set up JDK 17
+          uses: actions/setup-java@v4
+          with:
+            distribution: temurin
+            java-version: '17'
+
+        - name: Execute tests
+          run: |
+            mvn test
+
+        - name: Upload screenshots artifact
+          if: always()
+          uses: actions/upload-artifact@v4
+          with:
+            name: screenshots
+            path: target/screenshots/**
+            if-no-files-found: ignore
+            retention-days: 1
